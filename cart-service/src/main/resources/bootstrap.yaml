@@ -9,6 +9,7 @@ spring:
       config:
         file-extension: yaml
         shared-configs:
-          - data-id: share-jdbc.yaml
+          - data-id: shared-jdbc.yaml
           - data-id: shared-log.yaml
           - data-id: shared-swagger.yaml
+          - data-id: shared-seata.yaml

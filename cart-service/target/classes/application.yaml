@@ -3,6 +3,8 @@ server:
 feign:
   okhttp:
     enabled: true
+  sentinel:
+    enabled: true #开启sentinel监控
 hm:
   db:
     database: hm-cart
