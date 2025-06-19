@@ -69,11 +69,11 @@ public class PayOrderServiceImpl extends ServiceImpl<PayOrderMapper, PayOrder> i
         // TODO 5.修改订单状态
         //tradeClient.markOrderPaySuccess(po.getBizOrderNo());
         //发送mq消息
-        try {
+        /*try {
             rabbitTemplate.convertAndSend("pay.direct","pay.success",po.getBizOrderNo());
         }catch (Exception e){
             log.error("发送支付状态通知失败，订单id：{}",po.getBizOrderNo(),e);
-        }
+        }*/
     }
 
     public boolean markPayOrderSuccess(Long id, LocalDateTime successTime) {

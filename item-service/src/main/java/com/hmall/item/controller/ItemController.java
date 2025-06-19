@@ -4,6 +4,7 @@ package com.hmall.item.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hmall.api.dto.ItemDTO;
 import com.hmall.api.dto.OrderDetailDTO;
+import com.hmall.common.domain.OrderDetail;
 import com.hmall.common.domain.PageDTO;
 import com.hmall.common.domain.PageQuery;
 import com.hmall.common.utils.BeanUtils;
@@ -80,5 +81,11 @@ public class ItemController {
     @PutMapping("/stock/deduct")
     public void deductStock(@RequestBody List<OrderDetailDTO> items){
         itemService.deductStock(items);
+    }
+
+    @ApiOperation("恢复商品库存")
+    @PutMapping("/restore")
+    public void restoreItems(@RequestBody List<OrderDetail> orderDetails){
+        itemService.restore(orderDetails);
     }
 }

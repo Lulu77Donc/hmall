@@ -3,14 +3,15 @@ package com.hmall.trade.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmall.api.client.CartClient;
 import com.hmall.api.client.ItemClient;
+import com.hmall.api.client.PayClient;
 import com.hmall.api.dto.ItemDTO;
 import com.hmall.api.dto.OrderDetailDTO;
+import com.hmall.common.domain.OrderDetail;
 import com.hmall.common.exception.BadRequestException;
 import com.hmall.common.utils.UserContext;
 import com.hmall.trade.constants.MQConstants;
 import com.hmall.trade.domain.dto.OrderFormDTO;
 import com.hmall.trade.domain.po.Order;
-import com.hmall.trade.domain.po.OrderDetail;
 import com.hmall.trade.mapper.OrderMapper;
 import com.hmall.trade.service.IOrderDetailService;
 import com.hmall.trade.service.IOrderService;
@@ -42,6 +43,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final IOrderDetailService detailService;
     private final CartClient cartClient;
     private final RabbitTemplate rabbitTemplate;
+    private final PayClient payClient;
 
     @Override
     @GlobalTransactional
@@ -110,8 +112,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public void cancelOrder(Long orderId) {
         // TODO 标记订单为已关闭
+        lambdaUpdate()
+                .set(Order::getStatus,5)
+                .eq(Order::getId,orderId)
+                .update();
+        //将支付订单设为取消
+        payClient.queryPayOrderByBizOrderNo(orderId);
 
         // TODO 恢复库存
+        //得到订单中商品id
+        List<OrderDetail> list = detailService.lambdaQuery().eq(OrderDetail::getOrderId, orderId).list();
+        itemClient.restoreItems(list);
     }
 
     private List<OrderDetail> buildDetails(Long orderId, List<ItemDTO> items, Map<Long, Integer> numMap) {

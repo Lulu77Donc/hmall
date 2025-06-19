@@ -3,6 +3,7 @@ package com.hmall.item.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hmall.api.dto.ItemDTO;
 import com.hmall.api.dto.OrderDetailDTO;
+import com.hmall.common.domain.OrderDetail;
 import com.hmall.item.domain.po.Item;
 
 import java.util.Collection;
@@ -21,4 +22,6 @@ public interface IItemService extends IService<Item> {
     void deductStock(List<OrderDetailDTO> items);
 
     List<ItemDTO> queryItemByIds(Collection<Long> ids);
+
+    void restore(List<OrderDetail> orderDetails);
 }
